@@ -115,10 +115,22 @@
       searchButton.innerHTML = '<span class="loading"></span>Đang tải...';
       ketqua.textContent = "⏳ Đang tải...";
 
-      const url = `https://script.google.com/macros/s/AKfycbwsPg4xiRWt3GkcVyYFX86T8-PjgZO98A4ZeZxYlrj4-_XaWEGJHPBFL_CI8R4pQg/exec?id=${id}&pass=${pass}`;
+      const url = `https://script.google.com/macros/s/AKfycbwA1q9dC7q5zayg0j165-35qq7oUlq2YyysPZTBsp4ZsaWcKayG22JTIDLXQCT/exec?id=${id}&pass=${pass}`;
 
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Accept': 'application/json',
+          },
+          redirect: 'follow'
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const data = await res.json();
 
         if (data.error) {
