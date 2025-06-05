@@ -1,66 +1,125 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Tra cứu điểm</title>
-</head>
-<body>
-  <h2>Tra cứu điểm</h2>
-  <input type="text" id="id" placeholder="Mã học sinh"><br>
-  <input type="password" id="pass" placeholder="Mật khẩu"><br>
-  <button onclick="traCuu()">Tra cứu</button>
-  <pre id="ketqua"></pre>
-
-  <script>
-    async function traCuu() {<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tra cứu điểm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #ketqua {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      min-height: 50px;
+    }
+    .error {
+      color: #dc3545;
+    }
+    .success {
+      color: #28a745;
+    }
+  </style>
 </head>
 <body>
-  <h2>Tra cứu điểm học sinh</h2>
-  <input type="text" id="id" placeholder="Mã học sinh"><br>
-  <input type="password" id="pass" placeholder="Mật khẩu"><br>
-  <button onclick="traCuu()">Tra cứu</button>
-  <pre id="ketqua"></pre>
+  <div class="container">
+    <h2>Tra cứu điểm học sinh</h2>
+    <div class="input-group">
+      <input type="text" id="id" placeholder="Mã học sinh" required>
+    </div>
+    <div class="input-group">
+      <input type="password" id="pass" placeholder="Mật khẩu" required>
+    </div>
+    <button onclick="traCuu()">Tra cứu</button>
+    <pre id="ketqua"></pre>
+  </div>
 
   <script>
     async function traCuu() {
       const id = document.getElementById("id").value;
       const pass = document.getElementById("pass").value;
-      const url = `https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxyLW5f9HkRCe_SSKWbtWWSf4rIBp9lI43B86rtmglH_hsK9DyvkBDK6MNQi1VRHEeS/exec/exec?id=${id}&pass=${pass}`;
+      const ketqua = document.getElementById("ketqua");
+      
+      if (!id || !pass) {
+        ketqua.textContent = "⚠️ Vui lòng nhập đầy đủ mã học sinh và mật khẩu";
+        ketqua.className = "error";
+        return;
+      }
+
+      const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?id=${id}&pass=${pass}`;
+      ketqua.textContent = "⏳ Đang tải...";
 
       try {
         const res = await fetch(url);
         const data = await res.json();
 
         if (data.error) {
-          document.getElementById("ketqua").textContent = "❌ " + data.error;
+          ketqua.textContent = "❌ " + data.error;
+          ketqua.className = "error";
         } else {
           let output = "✅ Kết quả:\n";
           for (let key in data) {
             output += `${key}: ${data[key]}\n`;
           }
-          document.getElementById("ketqua").textContent = output;
+          ketqua.textContent = output;
+          ketqua.className = "success";
         }
       } catch (err) {
-        document.getElementById("ketqua").textContent = "⚠️ Lỗi kết nối hoặc API không phản hồi.";
+        ketqua.textContent = "⚠️ Lỗi kết nối hoặc API không phản hồi.";
+        ketqua.className = "error";
         console.error(err);
       }
     }
-  </script>
-</body>
-</html>
 
-      const id = document.getElementById("id").value;
-      const pass = document.getElementById("pass").value;
-      const url = `https://script.google.com/macros/s/https://https://script.google.com/macros/s/AKfycbxOLaD1tJWeHerV-RNVbxVWN96CWmZ1CpNGOiLNqG2qp2fBB1ciBPL_ITJT2boHP0dn/exec/exec?id=${id}&pass=${pass}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-
-      document.getElementById("ketqua").textContent = JSON.stringify(data, null, 2);
-    }
+    // Thêm sự kiện nhấn Enter
+    document.getElementById("pass").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        traCuu();
+      }
+    });
   </script>
 </body>
 </html>
