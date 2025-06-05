@@ -1,68 +1,25 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Tra cứu điểm dễ thương 🎀</title>
-  <style>
-    body {
-      background: #fff0f5;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
-    h1 {
-      color: #d63384;
-    }
-    input {
-      padding: 10px;
-      margin: 5px;
-      border: 2px solid #ffc0cb;
-      border-radius: 10px;
-    }
-    button {
-      padding: 10px 20px;
-      background: #ff69b4;
-      border: none;
-      color: white;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+  <title>Tra cứu điểm</title>
 </head>
 <body>
-  <h1>Tra cứu điểm cá nhân 💗</h1>
-  <input id="id" placeholder="Mã học sinh"><br>
-  <input id="pass" type="password" placeholder="Mật khẩu"><br>
-  <button onclick="getScore()">Xem điểm</button>
-  <div id="result"></div>
+  <h2>Tra cứu điểm</h2>
+  <input type="text" id="id" placeholder="Mã học sinh"><br>
+  <input type="password" id="pass" placeholder="Mật khẩu"><br>
+  <button onclick="traCuu()">Tra cứu</button>
+  <pre id="ketqua"></pre>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxOLaD1tJWeHerV-RNVbxVWN96CWmZ1CpNGOiLNqG2qp2fBB1ciBPL_ITJT2boHP0dn/exec"; // ← dán link Apps Script
-
-    async function getScore() {
+    async function traCuu() {
       const id = document.getElementById("id").value;
       const pass = document.getElementById("pass").value;
-      const result = document.getElementById("result");
+      const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?id=${id}&pass=${pass}`;
 
-      result.innerHTML = "⏳ Đang tra cứu...";
-
-      const res = await fetch(`${API_URL}?id=${id}&pass=${pass}`);
+      const res = await fetch(url);
       const data = await res.json();
 
-      if (data.error) {
-        result.innerHTML = "❌ Sai mã học sinh hoặc mật khẩu!";
-      } else {
-        result.innerHTML = `
-          👤 Tên: ${data.name}<br>
-          📘 Toán: ${data.toan}<br>
-          📕 Văn: ${data.van}<br>
-          📗 Anh: ${data.anh}
-        `;
-      }
+      document.getElementById("ketqua").textContent = JSON.stringify(data, null, 2);
     }
   </script>
 </body>
