@@ -44,9 +44,14 @@
       cursor: pointer;
       font-size: 16px;
       margin-top: 10px;
+      transition: background-color 0.3s;
     }
     button:hover {
       background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
     }
     #ketqua {
       margin-top: 20px;
@@ -62,6 +67,21 @@
     .success {
       color: #28a745;
     }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 3px solid #3498db;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -73,7 +93,7 @@
     <div class="input-group">
       <input type="password" id="pass" placeholder="Mật khẩu" required>
     </div>
-    <button onclick="traCuu()">Tra cứu</button>
+    <button onclick="traCuu()" id="searchButton">Tra cứu</button>
     <pre id="ketqua"></pre>
   </div>
 
@@ -82,6 +102,7 @@
       const id = document.getElementById("id").value;
       const pass = document.getElementById("pass").value;
       const ketqua = document.getElementById("ketqua");
+      const searchButton = document.getElementById("searchButton");
       
       if (!id || !pass) {
         ketqua.textContent = "⚠️ Vui lòng nhập đầy đủ mã học sinh và mật khẩu";
@@ -89,8 +110,12 @@
         return;
       }
 
-      const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?id=${id}&pass=${pass}`;
+      // Disable button and show loading
+      searchButton.disabled = true;
+      searchButton.innerHTML = '<span class="loading"></span>Đang tải...';
       ketqua.textContent = "⏳ Đang tải...";
+
+      const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?id=${id}&pass=${pass}`;
 
       try {
         const res = await fetch(url);
@@ -111,6 +136,10 @@
         ketqua.textContent = "⚠️ Lỗi kết nối hoặc API không phản hồi.";
         ketqua.className = "error";
         console.error(err);
+      } finally {
+        // Re-enable button and restore text
+        searchButton.disabled = false;
+        searchButton.textContent = "Tra cứu";
       }
     }
 
