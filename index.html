@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra cứu điểm</title>
-  <!-- CSS giữ nguyên như trước -->
+  <title>Tra cứu điểm học sinh</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; }
+    .container { max-width: 500px; margin: 30px auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+    h2 { text-align: center; }
+    .input-group { margin-bottom: 15px; }
+    input { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; }
+    button { width: 100%; padding: 12px; background: #4caf50; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    button:disabled { background: #ccc; }
+    #ketqua { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 4px; min-height: 50px; }
+    .error { color: #dc3545; }
+    .success { color: #28a745; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -18,69 +29,54 @@
     <button onclick="traCuu()" id="searchButton">Tra cứu</button>
     <pre id="ketqua"></pre>
   </div>
-
   <script>
     function traCuu() {
-      const id = document.getElementById("id").value;
-      const pass = document.getElementById("pass").value;
+      const id = document.getElementById("id").value.trim();
+      const pass = document.getElementById("pass").value.trim();
       const ketqua = document.getElementById("ketqua");
       const searchButton = document.getElementById("searchButton");
-      
       ketqua.className = "";
+
       if (!id || !pass) {
         ketqua.textContent = "⚠️ Vui lòng nhập đầy đủ mã học sinh và mật khẩu";
         ketqua.className = "error";
         return;
       }
 
-      // Disable button and show loading
       searchButton.disabled = true;
-      searchButton.innerHTML = '<span class="loading"></span>Đang tải...';
       ketqua.textContent = "⏳ Đang tải...";
 
-      // SỬA LẠI DÒNG NÀY: Dùng backtick (`) ở đầu và cuối
-      const url = `https://script.google.com/macros/s/AKfycbzuPASjaYvCipCeeVcYxVhxoWFf-CS7cplBhvVIXvxRYOqEqyx80_9ARRpghy4S5OyY/exec?id=${id}&pass=${pass}`;
+      const url = `https://script.google.com/macros/s/AKfycbxn68NxQiV9QGgMvNuIOXhSulbF02fpUNWOyvp5FPBJnFkmZG7M8B8R-QKUW7BAm3KO/exec?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(pass)}`;
 
-      fetch(url, {
-        method: 'GET',
-        mode: 'cors',
-        headers: { 'Accept': 'application/json' },
-        redirect: 'follow'
-      })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        if (data.error) {
-          ketqua.textContent = "❌ " + data.error;
-          ketqua.className = "error";
-        } else {
-          let output = "✅ Kết quả:\n";
-          for (let key in data) {
-            output += `${key}: ${data[key]}\n`;
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          if (data.error) {
+            ketqua.textContent = "❌ " + data.error;
+            ketqua.className = "error";
+          } else {
+            let output = "✅ Kết quả:\n";
+            for (let key in data) {
+              output += `${key}: ${data[key]}\n`;
+            }
+            ketqua.textContent = output;
+            ketqua.className = "success";
           }
-          ketqua.textContent = output;
-          ketqua.className = "success";
-        }
-      })
-      .catch(err => {
-        ketqua.textContent = "⚠️ Lỗi kết nối hoặc API không phản hồi.";
-        ketqua.className = "error";
-        console.error(err);
-      })
-      .finally(() => {
-        // Re-enable button and restore text
-        searchButton.disabled = false;
-        searchButton.textContent = "Tra cứu";
-      });
+        })
+        .catch(err => {
+          ketqua.textContent = "⚠️ Lỗi kết nối hoặc API không phản hồi.";
+          ketqua.className = "error";
+        })
+        .finally(() => {
+          searchButton.disabled = false;
+        });
     }
 
-    // Thêm sự kiện nhấn Enter
     document.getElementById("pass").addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-        traCuu();
-      }
+      if (event.key === "Enter") traCuu();
     });
   </script>
 </body>
