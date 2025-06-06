@@ -104,6 +104,7 @@
       const ketqua = document.getElementById("ketqua");
       const searchButton = document.getElementById("searchButton");
       
+      ketqua.className = "";
       if (!id || !pass) {
         ketqua.textContent = "⚠️ Vui lòng nhập đầy đủ mã học sinh và mật khẩu";
         ketqua.className = "error";
@@ -115,7 +116,7 @@
       searchButton.innerHTML = '<span class="loading"></span>Đang tải...';
       ketqua.textContent = "⏳ Đang tải...";
 
-      const url = https://script.google.com/macros/s/AKfycbzuPASjaYvCipCeeVcYxVhxoWFf-CS7cplBhvVIXvxRYOqEqyx80_9ARRpghy4S5OyY/exec?id=${id}&pass=${pass}`;
+      const url = `https://script.google.com/macros/s/AKfycbzuPASjaYvCipCeeVcYxVhxoWFf-CS7cplBhvVIXvxRYOqEqyx80_9ARRpghy4S5OyY/exec?id=${id}&pass=${pass}`;
 
       try {
         const res = await fetch(url, {
